@@ -9,20 +9,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+#[Route('/tasks', name: 'task_')]
 class TaskController extends AbstractController
 {
-    /**
-     * @Route("/tasks", name="task_list")
-     */
-    public function listAction(TaskRepository $taskRepository)
+    #[Route('', name: 'list', methods: ['GET'])]
+    public function taskList(TaskRepository $taskRepository)
     {
         return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
     }
 
-    /**
-     * @Route("/tasks/create", name="task_create")
-     */
-    public function createAction(Request $request, TaskRepository $taskRepository)
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    public function taskCreate(Request $request, TaskRepository $taskRepository)
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -40,10 +37,8 @@ class TaskController extends AbstractController
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
     }
 
-    /**
-     * @Route("/tasks/{id}/edit", name="task_edit")
-     */
-    public function editAction(Task $task, Request $request, TaskRepository $taskRepository)
+    #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function taskEdit(Task $task, Request $request, TaskRepository $taskRepository)
     {
         $form = $this->createForm(TaskType::class, $task);
 
@@ -63,10 +58,8 @@ class TaskController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/tasks/{id}/toggle", name="task_toggle")
-     */
-    public function toggleTaskAction(Task $task, TaskRepository $taskRepository)
+    #[Route('/{id}/toggle', name: 'toggle', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function taskToggle(Task $task, TaskRepository $taskRepository)
     {
         $task->toggle(!$task->isDone());
         $taskRepository->save($task, true);
@@ -76,10 +69,8 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('task_list');
     }
 
-    /**
-     * @Route("/tasks/{id}/delete", name="task_delete")
-     */
-    public function deleteTaskAction(Task $task, TaskRepository $taskRepository)
+    #[Route('/{id}/delete', name: 'delete', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function taskDelete(Task $task, TaskRepository $taskRepository)
     {
         $taskRepository->remove($task, true);
 
