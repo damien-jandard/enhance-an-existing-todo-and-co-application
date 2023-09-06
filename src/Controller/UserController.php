@@ -10,20 +10,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[Route('/users', name: 'user_')]
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/users", name="user_list")
-     */
-    public function listAction(UserRepository $userRepository)
+    #[Route('', name: 'list', methods: ['GET'])]
+    public function userList(UserRepository $userRepository)
     {
         return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
     }
 
-    /**
-     * @Route("/users/create", name="user_create")
-     */
-    public function createAction(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    public function userCreate(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -45,10 +42,8 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    /**
-     * @Route("/users/{id}/edit", name="user_edit")
-     */
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
+    #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function userEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
     {
         $form = $this->createForm(UserType::class, $user);
 
