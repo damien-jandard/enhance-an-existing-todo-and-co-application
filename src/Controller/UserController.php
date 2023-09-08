@@ -7,10 +7,12 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/users', name: 'user_')]
+#[IsGranted('ROLE_ADMIN')]
 class UserController extends AbstractController
 {
     #[Route('', name: 'list', methods: ['GET'])]
