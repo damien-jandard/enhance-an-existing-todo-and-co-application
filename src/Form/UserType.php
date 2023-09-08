@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Constraints\Count;
 
 class UserType extends AbstractType
 {
@@ -54,9 +56,6 @@ class UserType extends AbstractType
                     'label' => 'Confirmation du mot de passe'
                 ],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez entrer un mot de passe',
-                    ]),
                     new Regex([
                         'pattern' => '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
                         'message' => 'Votre mot de passe doit comporter au minimum 8 caractères, et être composé d\'au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial (#?!@$%^&*-)'
@@ -74,6 +73,24 @@ class UserType extends AbstractType
                     ]),
                     new Email([
                         'message' => 'L\'email {{ value }} n\'est pas un email valide',
+                    ])
+                ]
+            ])
+            ->add('roles', ChoiceType::class, [
+                'attr' => [
+                    'class' => 'form-check'
+                ],
+                'choices' => [
+                    'Utilisateur' => 'ROLE_USER',
+                    'Administrateur' => 'ROLE_ADMIN'
+                ],
+                'expanded' => true,
+                'multiple' => true,
+                'label' => 'Rôles',
+                'constraints' => [
+                    new Count([
+                        'min' => 1,
+                        'minMessage' => 'Vous devez spécifier au moins un rôle'
                     ])
                 ]
             ])

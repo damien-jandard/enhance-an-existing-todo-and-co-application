@@ -42,6 +42,20 @@
                                 {{ form_errors(form.email) }}
                             </div>
                         </div>
+                        <div class="mb-3 ps-0 text-start">
+                            <div>
+                                {{ form_label(form.roles) }}
+                            </div>
+                            {% for role in form.roles %}
+                                <div class="form-check form-check-inline p-0">
+                                    {{ form_widget(role) }}
+                                    {{ form_label(role) }}
+                                </div>
+                            {% endfor %}
+                            <div class="text-danger">
+                                {{ form_errors(form.roles) }}
+                            </div>
+                        </div>
                         <div class="text-end">
                             <a href="{{ path('user_list') }}" class="btn btn-primary">Retour</a>
                             <button type="submit" class="btn btn-success text-end">Ajouter</button>
