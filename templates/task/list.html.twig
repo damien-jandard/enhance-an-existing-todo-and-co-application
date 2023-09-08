@@ -1,35 +1,49 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">{% endblock %}
-
+{% block title %}
+    Liste des tâches
+{% endblock %}
 {% block body %}
-    <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
-    <div class="row">
-        {% for task in tasks %}
-        <div class="col-sm-4 col-lg-4 col-md-4">
-            <div class="thumbnail">
-                <div class="caption">
-                    <h4 class="pull-right">
-                        {% if task.isDone %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}
-                    </h4>
-                    <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
-                    <p>{{ task.content }}</p>
-                </div>
-                <div>
-                    <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                        <button class="btn btn-success btn-sm pull-right">
-                            {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
-                        </button>
-                    </form>
-                    <form action="{{ path('task_delete', {'id' : task.id }) }}">
-                        <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
-                    </form>
-                </div>
-            </div>
+    {% include "task/_task_nav.html.twig" %}
+    <div class="row align-items-center my-4">
+        <div class="col-4">
+            <img src="{{ asset('img/todolist.png') }}" class="img-fluid" alt="Todolist">
         </div>
-        {% else %}
-            <div class="alert alert-warning" role="alert">
-                Il n'y a pas encore de tâche enregistrée. <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
+        <div class="col">
+            <h2 class="">Listes de toutes les tâches</h2>
+        </div>
+    </div>
+    <div class="row my-4">
+        {% for task in tasks %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col text-start">
+                                <h5 class="card-title"><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h5>
+                                <h6 class="card-subtitle">{%  if task.user is null %}anonyme{% else %}{{ task.user.username }}{% endif %}</h6>
+                            </div>
+                            <div class="col text-end">
+                                <h5 class="card-subtitle">
+                                    {% if task.isDone %}<i class='bx bxs-check-square'></i>{% else %}<i class='bx bxs-x-square'></i>{% endif %}
+                                </h5>
+                            </div>
+                        </div>
+                        <p class="card-text text-start py-3">{{ task.content }}</p>
+                        <div class="text-end">
+                            <form action="{{ path('task_toggle', {'id' : task.id }) }}">
+                                <button class="btn btn-success btn-sm mb-2">
+                                    {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
+                                </button>
+                            </form>
+                            <form action="{{ path('task_delete', {'id' : task.id }) }}">
+                                <button class="btn btn-danger btn-sm">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         {% endfor %}
     </div>

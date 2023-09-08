@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Service\TaskHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,9 +14,27 @@ use Symfony\Component\HttpFoundation\Request;
 class TaskController extends AbstractController
 {
     #[Route('', name: 'list', methods: ['GET'])]
-    public function taskList(TaskRepository $taskRepository)
+    public function taskList(TaskHandlerInterface $taskHandler)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+        return $this->render('task/list.html.twig', [
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), true)
+        ]);
+    }
+
+    #[Route('/todo', name: 'todo', methods: ['GET'])]
+    public function taskListTodo(TaskHandlerInterface $taskHandler)
+    {
+        return $this->render('task/list.html.twig', [
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), false, false)
+        ]);
+    }
+
+    #[Route('/done', name: 'done', methods: ['GET'])]
+    public function taskListDone(TaskHandlerInterface $taskHandler)
+    {
+        return $this->render('task/list.html.twig', [
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), false, true)
+        ]);
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]

@@ -1,13 +1,43 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
+{% block title %}
+    Ajouter une tâche
+{% endblock %}
 {% block body %}
-    <div class="row">
-        {{ form_start(form, {'action' : path('task_create')}) }}
-            {{ form_widget(form) }}
-
-            <button type="submit" class="btn btn-success pull-right">Ajouter</button>
-        {{ form_end(form) }}
-
-        <a href="{{ path('task_list') }}" class="btn btn-primary">Retour à la liste des tâches</a>
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div class="card mt-3">
+                <div class="card-body">
+                    <div class="row align-items-center my-4">
+                        <div class="col-md-4">
+                            <img src="{{ asset('img/todolist.png') }}" class="img-fluid" alt="Todolist">
+                        </div>
+                        <div class="col-md-8">
+                            <h2 class="">Ajout d'une tâche</h2>
+                        </div>
+                    </div>
+                    {{ form_start(form, {'action' : path('task_create')}) }}
+                        <div class="mb-3 text-start">
+                            {{ form_label(form.title) }}
+                            {{ form_widget(form.title) }}
+                            <div class="text-danger">
+                                {{ form_errors(form.title) }}
+                            </div>
+                        </div>
+                        <div class="mb-3 text-start">
+                            {{ form_label(form.content) }}
+                            {{ form_widget(form.content) }}
+                            <div class="text-danger">
+                                {{ form_errors(form.content) }}
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <a href="{{ path('homepage') }}" class="btn btn-primary">Retour</a>
+                            <button type="submit" class="btn btn-success text-end">Ajouter</button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
