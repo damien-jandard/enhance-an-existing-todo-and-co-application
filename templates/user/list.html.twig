@@ -23,6 +23,7 @@
                     <th>#</th>
                     <th>Nom d'utilisateur</th>
                     <th>Adresse d'utilisateur</th>
+                    <th>Rôle</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -32,6 +33,12 @@
                         <th scope="row">{{ loop.index }}</th>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
+                        <td>
+                            {% for role in user.roles %}
+                                {{ role|replace({'ROLE_': ''}) }}
+                                {% if not loop.last %}/{% endif %}
+                            {% endfor %}
+                        </td>
                         <td>
                             <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Modifier</a>
                         </td>
