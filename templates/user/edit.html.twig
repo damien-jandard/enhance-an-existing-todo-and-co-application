@@ -1,14 +1,54 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block header_title %}<h1>Modifier <strong>{{ user.username }}</strong></h1>{% endblock %}
-{% block header_img %}{% endblock %}
-
+{% block title %}
+    Modifier un utilisateur
+{% endblock %}
 {% block body %}
-    <div class="row">
-        {{ form_start(form, {'action' : path('user_edit', {'id' : user.id})}) }}
-        {{ form_widget(form) }}
-
-        <button type="submit" class="btn btn-success pull-right">Modifier</button>
-        {{ form_end(form) }}
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div class="card mt-3">
+                <div class="card-body">
+                    <div class="row align-items-center my-4">
+                        <div class="col-md-4">
+                            <img src="{{ asset('img/todolist.png') }}" class="img-fluid" alt="Todolist">
+                        </div>
+                        <div class="col-md-8">
+                            <h2 class="">Modification d'un utilisateur</h2>
+                        </div>
+                    </div>
+                    {{ form_start(form, {'action' : path('user_edit', { 'id' : user.id })}) }}
+                        <div class="mb-3 text-start">
+                            {{ form_label(form.username) }}
+                            {{ form_widget(form.username) }}
+                            <div class="text-danger">
+                                {{ form_errors(form.username) }}
+                            </div>
+                        </div>
+                        <div class="mb-3 text-start">
+                            {{ form_label(form.password.first) }}
+                            {{ form_widget(form.password.first) }}
+                        </div>
+                        <div class="mb-3 text-start">
+                            {{ form_label(form.password.second) }}
+                            {{ form_widget(form.password.second) }}
+                            <div class="text-danger">
+                                {{ form_errors(form.password.first) }}
+                            </div>
+                        </div>
+                        <div class="mb-3 text-start">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email) }}
+                            <div class="text-danger">
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <a href="{{ path('user_list') }}" class="btn btn-primary">Retour</a>
+                            <button type="submit" class="btn btn-success text-end">Ajouter</button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

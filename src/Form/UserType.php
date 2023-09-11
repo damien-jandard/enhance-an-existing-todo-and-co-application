@@ -4,8 +4,12 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
@@ -14,15 +18,65 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username', TextType::class, ['label' => "Nom d'utilisateur"])
+            ->add('username', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control my-2',
+                    'autofocus' => true
+                ],
+                'label' => "Nom d'utilisateur",
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer un nom d\'utilisateur',
+                    ]),
+                    new Length([
+                        'min' => 2,
+                        'minMessage' => 'Le nom d\'utilisateur doit contenir au moins {{ limit }} caractères',
+                    ]),
+                ]
+            ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Les deux mots de passe doivent correspondre.',
-                'required' => true,
-                'first_options'  => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
+                'mapped' => false,
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                ],
+                'invalid_message' => 'Les champs de mot de passe doivent correspondre',
+                'first_options' => [
+                    'attr' => [
+                        'class' => 'form-control my-2',
+                    ],
+                    'label' => 'Mot de passe'
+                ],
+                'second_options' => [
+                    'attr' => [
+                        'class' => 'form-control my-2',
+                    ],
+                    'label' => 'Confirmation du mot de passe'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer un mot de passe',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
+                        'message' => 'Votre mot de passe doit comporter au minimum 8 caractères, et être composé d\'au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial (#?!@$%^&*-)'
+                    ]),
+                ],
             ])
-            ->add('email', EmailType::class, ['label' => 'Adresse email'])
+            ->add('email', EmailType::class, [
+                'attr' => [
+                    'class' => 'form-control my-2'
+                ],
+                'label' => 'Adresse email',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer une adresse mail',
+                    ]),
+                    new Email([
+                        'message' => 'L\'email {{ value }} n\'est pas un email valide',
+                    ])
+                ]
+            ])
         ;
     }
 }

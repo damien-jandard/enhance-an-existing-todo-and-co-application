@@ -1,19 +1,45 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
+{% block title %}
+    Connexion
+{% endblock %}
 {% block body %}
-    {% if error %}
-        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    <form method="post">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
-
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="_password" />
-
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-        <button class="btn btn-success" type="submit">Se connecter</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center my-4">
+                        <div class="col-md-6">
+                            <img src="{{ asset('img/todolist.png') }}" class="img-fluid" alt="Todolist">
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="">Connexion</h2>
+                        </div>
+                    </div>
+                    {% if app.user %}
+                        <div class="m-4">
+                            Vous êtes connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>. Souhaitez-vous vous <a href="{{ path('logout') }}">déconnecter ?</a>
+                        </div>
+                    {% endif %}
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="_password">
+                        </div>
+                        <div>
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        </div>
+                        {% if error %}
+                            <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+                        <button type="submit" class="btn btn-success">Se connecter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
