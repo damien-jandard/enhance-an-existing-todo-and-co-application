@@ -28,3 +28,7 @@ services:
             $admin_email: '%env(ADMIN_EMAIL)%'
         tags:
             - { name: doctrine.event_listener, event: preRemove }
+
+    App\DataFixtures\UserFixtures:
+        arguments:
+            $admin_email: '%env(ADMIN_EMAIL)%'

@@ -12,17 +12,19 @@ class UserFixtures extends Fixture
     public const ADMIN_REFERENCE = 'admin';
     public const USER_REFERENCE = 'user';
     private $userPasswordHasher;
+    public $admin_email;
 
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher, string $admin_email)
     {
         $this->userPasswordHasher = $userPasswordHasher;
+        $this->admin_email = $admin_email;
     }
 
     public function load(ObjectManager $manager): void
     {
         $admin = new User();
         $admin->setUsername('admin')
-            ->setEmail('admin@todolist.com')
+            ->setEmail($this->admin_email)
             ->setPassword($this->userPasswordHasher->hashPassword($admin, 'Admin1234*'))
             ->setRoles(['ROLE_ADMIN']);
         $manager->persist($admin);
