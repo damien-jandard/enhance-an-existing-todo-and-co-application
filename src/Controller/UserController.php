@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Service\UserHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -46,6 +47,16 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    public function userDelete(User $user, UserRepository $userRepository, UserHandlerInterface $userHandler)
+    {
+        $userHandler($user);
+
+        $this->addFlash('success', "L'utilisateur a bien été supprimé.");
+
+        return $this->redirectToRoute('user_list', ['users' => $userRepository->findAll()]);
+    }
+
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function userEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
     {
@@ -63,9 +74,11 @@ class UserController extends AbstractController
                     )
                 );
             }
-            $roles = $form->get("roles")->getData();
-            $user->setRoles($roles);
 
+            if ($user->getEmail() === $this->getParameter('ADMIN_EMAIL')) {
+                $user->setRoles(['ROLE_ADMIN']);
+            }
+            
             $userRepository->save($user, true);
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");

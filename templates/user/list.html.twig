@@ -41,6 +41,29 @@
                         </td>
                         <td>
                             <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Modifier</a>
+                            {% if user.email != ADMIN_EMAIL %}
+                                <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#user{{ user.id }}">Supprimer</a>
+                                <div class="modal fade" id="user{{ user.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="auto" aria-labelledby="userLabel{{ user.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="userLabel{{ user.id }}">{{ user.username }}</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                                            </div>
+                                            <form method="post" action="{{ path('user_delete', {'id': user.id}) }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                                                    <button type="submit" class="btn btn-danger">Oui</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
