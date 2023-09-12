@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Security\Voter\TaskVoter;
 use App\Service\TaskHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/tasks', name: 'task_')]
 class TaskController extends AbstractController
@@ -58,6 +60,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[IsGranted(TaskVoter::CAN_UPDATE, subject: 'task')]
     public function taskEdit(Task $task, Request $request, TaskRepository $taskRepository)
     {
         $form = $this->createForm(TaskType::class, $task);
@@ -79,6 +82,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{id}/toggle', name: 'toggle', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[IsGranted(TaskVoter::CAN_UPDATE, subject: 'task')]
     public function taskToggle(Task $task, TaskRepository $taskRepository)
     {
         $task->toggle(!$task->isDone());
@@ -90,6 +94,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[IsGranted(TaskVoter::CAN_DELETE, subject: 'task')]
     public function taskDelete(Task $task, TaskRepository $taskRepository)
     {
         $taskRepository->remove($task, true);
