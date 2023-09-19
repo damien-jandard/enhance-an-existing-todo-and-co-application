@@ -7,6 +7,7 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Service\UserHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,13 +18,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
     #[Route('', name: 'list', methods: ['GET'])]
-    public function userList(UserRepository $userRepository)
+    public function userList(UserRepository $userRepository): Response
     {
         return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    public function userCreate(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
+    public function userCreate(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -48,17 +49,15 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
-    public function userDelete(User $user, UserRepository $userRepository, UserHandlerInterface $userHandler)
+    public function userDelete(User $user, UserRepository $userRepository, UserHandlerInterface $userHandler): Response
     {
         $userHandler($user);
-
-        $this->addFlash('success', "L'utilisateur a bien été supprimé.");
 
         return $this->redirectToRoute('user_list', ['users' => $userRepository->findAll()]);
     }
 
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function userEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
+    public function userEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
     {
         $form = $this->createForm(UserType::class, $user);
 
@@ -75,9 +74,11 @@ class UserController extends AbstractController
                 );
             }
 
-            if ($user->getEmail() === $this->getParameter('ADMIN_EMAIL')) {
-                $user->setRoles(['ROLE_ADMIN']);
-            }
+            foreach (explode(', ', $this->getParameter('ADMIN_EMAIL')) as $admin) {
+                if ($user->getEmail() === $admin) {
+                    $user->setRoles(['ROLE_ADMIN']);
+                }
+            }            
             
             $userRepository->save($user, true);
 

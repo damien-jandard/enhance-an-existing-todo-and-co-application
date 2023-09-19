@@ -20,29 +20,53 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
         $tasks = [
             [
                 'title' => 'Tâche n°1',
-                'content' => 'Répondre aux e-mails professionnels.'
+                'content' => 'Gérer les comptes utilisateurs.'
             ],
             [
                 'title' => 'Tâche n°2',
-                'content' => 'Préparer une présentation pour la réunion de l\'équipe à 14h.'
+                'content' => 'Rédiger un rapport mensuel sur les ventes.'
             ],
             [
                 'title' => 'Tâche n°3',
-                'content' => 'Faire 30 minutes d\'exercice physique.'
+                'content' => 'Planifier et organiser la réunion d\'équipe hebdomadaire.'
             ],
             [
                 'title' => 'Tâche n°4',
-                'content' => 'Faire les courses après le travail.'
+                'content' => 'Développer de nouvelles fonctionnalités pour l\'application client.'
             ],
             [
                 'title' => 'Tâche n°5',
-                'content' => 'Lire le premier chapitre du nouveau livre.'
+                'content' => 'Effectuer des recherches de marché pour identifier de nouvelles opportunités.'
+            ],
+            [
+                'title' => 'Tâche n°6',
+                'content' => 'Répondre aux demandes de support client par email et par téléphone.'
+            ],
+            [
+                'title' => 'Tâche n°7',
+                'content' => 'Mettre à jour la documentation technique du projet.'
+            ],
+            [
+                'title' => 'Tâche n°8',
+                'content' => 'Effectuer des tests de qualité sur le produit en développement.'
+            ],
+            [
+                'title' => 'Tâche n°9',
+                'content' => 'Préparer une présentation pour le prochain comité de direction.'
+            ],
+            [
+                'title' => 'Tâche n°10',
+                'content' => 'Collaborer avec l\'équipe marketing pour lancer une nouvelle campagne publicitaire.'
             ]
         ];
 
         foreach ($tasks as $t) {
             $task = new Task();
-            rand(0, 1) === 0 ? $task->setUser($user) : $task->setUser(null);
+            if ($t['title'] === 'Tâche n°1') {
+                $task->setUser($admin);
+            } else {
+                rand(0, 1) === 0 ? $task->setUser($user) : $task->setUser(null);
+            }
             $task->setTitle($t['title'])
                 ->setContent($t['content']);
             $manager->persist($task);

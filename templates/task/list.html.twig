@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Liste des tâches
+    {{ title }}
 {% endblock %}
 {% block body %}
     {% include "task/_task_nav.html.twig" %}
@@ -10,7 +10,7 @@
             <img src="{{ asset('img/todolist.png') }}" class="img-fluid" alt="Todolist">
         </div>
         <div class="col">
-            <h2 class="">Listes de toutes les tâches</h2>
+            <h2 class="">{{ title }}</h2>
         </div>
     </div>
     <div class="row my-4">
