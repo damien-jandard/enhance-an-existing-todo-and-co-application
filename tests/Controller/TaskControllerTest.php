@@ -191,7 +191,25 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
-    public function testTaskToggleSuccessfully(): void
+    public function testTaskCompleted(): void
+    {
+        $user = $this->login('user');
+        $task = $user->getTasks()->last();
+        $this->client->request(Request::METHOD_GET, '/tasks/' . $task->getId() . '/toggle');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->assertRouteSame('task_toggle');
+        $this->assertResponseRedirects();
+
+        $this->client->followRedirect();
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertRouteSame('task_list');
+        $this->assertSelectorTextContains('h2', 'Liste de toutes les tâches');
+        $this->assertSelectorExists('div.alert.alert-success');
+    }
+
+    public function testTaskToDo(): void
     {
         $user = $this->login('user');
         $task = $user->getTasks()->last();
