@@ -23,12 +23,16 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\EventListener\BlockUserDeletionListener:
-        arguments:
-            $admin_email: '%env(ADMIN_EMAIL)%'
-        tags:
-            - { name: doctrine.event_listener, event: preRemove }
+    # App\EventListener\BlockUserDeletionListener:
+    #     arguments:
+    #         $admin_email: '%env(ADMIN_EMAIL)%'
+    #     tags:
+    #         - { name: doctrine.event_listener, event: preRemove }
 
     App\DataFixtures\UserFixtures:
+        arguments:
+            $admin_email: '%env(ADMIN_EMAIL)%'
+
+    App\Service\UserHandler:
         arguments:
             $admin_email: '%env(ADMIN_EMAIL)%'

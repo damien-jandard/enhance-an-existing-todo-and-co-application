@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -21,6 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: "Vous devez saisir un nom d'utilisateur.")]
     private ?string $username = null;
 
     #[ORM\Column]
@@ -30,9 +32,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    // #[Assert\NotBlank(message: "Vous devez saisir un mot de passe.")]
     private ?string $password = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: "Vous devez saisir un email.")]
     private ?string $email = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class)]
