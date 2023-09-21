@@ -24,7 +24,7 @@ class UserRepositoryTest extends KernelTestCase
             ->setRoles([])
             ->setPassword('0000')
             ->setEmail('user2@test.com');
-        
+
         $this->userRepository->save($user, true);
 
         $newUser = $this->userRepository->findOneBy(['username' => 'user2']);
@@ -40,7 +40,7 @@ class UserRepositoryTest extends KernelTestCase
 
         $this->userRepository->remove($user, true);
 
-        $this->assertNull($this->userRepository->findOneBy(['username' => 'user2']));        
+        $this->assertNull($this->userRepository->findOneBy(['username' => 'user2']));
     }
 
     public function tearDown(): void

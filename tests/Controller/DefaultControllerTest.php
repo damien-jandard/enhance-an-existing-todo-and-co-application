@@ -29,11 +29,11 @@ class DefaultControllerTest extends WebTestCase
     public function testHomepageWhenNotLoggedIn(): void
     {
         $this->client->request(Request::METHOD_GET, '/');
-        
+
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();
-        
+
         $this->assertRouteSame('login');
         $this->assertSelectorTextContains('h2', 'Connexion');
     }

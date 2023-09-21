@@ -31,7 +31,7 @@ class UserFixtures extends Fixture
                 ->setRoles(['ROLE_ADMIN']);
             $manager->persist($admin);
         }
-        
+
         $user = new User();
         $user->setUsername('user')
             ->setEmail('user@todolist.com')

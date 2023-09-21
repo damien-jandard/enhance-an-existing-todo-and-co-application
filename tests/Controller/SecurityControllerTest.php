@@ -16,7 +16,7 @@ class SecurityControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
     }
-    
+
     public function testLoginPage(): void
     {
         $this->client->request(Request::METHOD_GET, '/login');
@@ -34,7 +34,7 @@ class SecurityControllerTest extends WebTestCase
             '_password' => '12345678'
         ]);
         $this->client->submit($form);
-        
+
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();
@@ -42,7 +42,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertRouteSame('login');
         $this->assertSelectorExists('div.alert.alert-danger');
     }
-    
+
     public function testLoginSuccessfull(): void
     {
         $crawler = $this->client->request(Request::METHOD_GET, '/login');
@@ -57,7 +57,10 @@ class SecurityControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         $this->assertRouteSame('homepage');
-        $this->assertSelectorTextContains('h2', 'Bienvenue sur Todo List, l\'application vous permettant de gérer l\'ensemble de vos tâches sans effort !');
+        $this->assertSelectorTextContains(
+            'h2',
+            'Bienvenue sur Todo List, l\'application vous permettant de gérer l\'ensemble de vos tâches sans effort !'
+        );
     }
 
     public function testLogout(): void

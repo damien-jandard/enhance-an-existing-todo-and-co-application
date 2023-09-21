@@ -23,7 +23,7 @@ class TaskRepositoryTest extends KernelTestCase
         $task->setTitle('Tâche de test')
             ->setContent('Contenu de ma tâche de test')
             ->toggle(false);
-        
+
         $this->taskRepository->save($task, true);
 
         $newTask = $this->taskRepository->findOneBy(['title' => 'Tâche de test']);
@@ -39,7 +39,7 @@ class TaskRepositoryTest extends KernelTestCase
 
         $this->taskRepository->remove($task, true);
 
-        $this->assertNull($this->taskRepository->findOneBy(['title' => 'Tâche de test']));        
+        $this->assertNull($this->taskRepository->findOneBy(['title' => 'Tâche de test']));
     }
 
     public function tearDown(): void

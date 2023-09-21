@@ -8,7 +8,7 @@ use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class UserHandler implements UserHandlerInterface
-{   
+{
     public function __construct(
         private TaskRepository $taskRepository,
         private UserRepository $userRepository,
@@ -16,7 +16,7 @@ class UserHandler implements UserHandlerInterface
         private RequestStack $requestStack
     ) {
     }
-    
+
     public function __invoke(User $user): void
     {
         $tasks = $this->taskRepository->findBy(['user' => $user]);
@@ -26,9 +26,15 @@ class UserHandler implements UserHandlerInterface
                 $this->taskRepository->save($task, true);
             }
             $this->userRepository->remove($user, true);
-            $this->requestStack->getSession()->getFlashBag()->add('success', 'L\'utilisateur a bien été supprimé');
+            $this->requestStack->getSession()->getFlashBag()->add(
+                'success',
+                'L\'utilisateur a bien été supprimé'
+            );
         } else {
-            $this->requestStack->getSession()->getFlashBag()->add('danger', 'Vous ne pouvez pas supprimer cet utilisateur');
-        }        
+            $this->requestStack->getSession()->getFlashBag()->add(
+                'danger',
+                'Vous ne pouvez pas supprimer cet utilisateur'
+            );
+        }
     }
 }
