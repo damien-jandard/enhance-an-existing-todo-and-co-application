@@ -17,7 +17,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
     }
-    
+
     public function login(string $username): ?User
     {
         $user = static::getContainer()->get(UserRepository::class)->findOneByUsername($username);
@@ -25,11 +25,11 @@ class TaskControllerTest extends WebTestCase
 
         return $user;
     }
-    
+
     public function testTaskListWhenNotLoggedIn(): void
     {
         $this->client->request(Request::METHOD_GET, '/tasks');
-        
+
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();
@@ -62,7 +62,7 @@ class TaskControllerTest extends WebTestCase
     public function testTaskTodoWhenNotLoggedIn(): void
     {
         $this->client->request(Request::METHOD_GET, '/tasks/todo');
-        
+
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();
@@ -95,9 +95,9 @@ class TaskControllerTest extends WebTestCase
     public function testTaskDoneWhenNotLoggedIn(): void
     {
         $this->client->request(Request::METHOD_GET, '/tasks/done');
-        
+
         $this->assertResponseRedirects();
-        
+
         $this->client->followRedirect();
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -145,7 +145,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();
-        
+
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertRouteSame('task_list');
         $this->assertSelectorTextContains('h2', 'Liste de toutes les tâches');

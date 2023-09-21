@@ -22,7 +22,7 @@ class TaskTest extends KernelTestCase
             ->toggle(false);
     }
 
-    public function assertHasErrors(Task $task, int $number = 0)
+    public function assertHasErrors(Task $task, int $number = 0): void
     {
         self::bootKernel();
         $container = static::getContainer();
@@ -46,7 +46,7 @@ class TaskTest extends KernelTestCase
         $this->assertHasErrors($this->getEntity()->setContent(''), 1);
     }
 
-    public function testTaskEntity()
+    public function testTaskEntity(): void
     {
         $task = $this->getEntity();
 

@@ -12,7 +12,7 @@ class TaskHandler implements TaskHandlerInterface
         private TaskRepository $taskRepository
     ) {
     }
-    
+
     public function __invoke(
         bool $admin,
         User $user,

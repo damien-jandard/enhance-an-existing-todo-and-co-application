@@ -27,11 +27,11 @@ class UserControllerTest extends WebTestCase
 
         return $user;
     }
-    
+
     public function testUserListWhenNotLoggedIn(): void
     {
         $this->client->request(Request::METHOD_GET, '/users');
-        
+
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();
@@ -83,7 +83,7 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();
-        
+
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertRouteSame('user_list');
         $this->assertSelectorTextContains('h1', 'Liste des utilisateurs');
@@ -177,7 +177,7 @@ class UserControllerTest extends WebTestCase
         $this->login('admin');
         $deleteUser = static::getContainer()->get(UserRepository::class)->findOneByUsername('update_user');
         $taskRepository = static::getContainer()->get(TaskRepository::class);
-        $task = (new Task)
+        $task = (new Task())
             ->setTitle('Tâche update_user')
             ->setContent('Contenu de la tâche pour update_user')
             ->setUser($deleteUser);

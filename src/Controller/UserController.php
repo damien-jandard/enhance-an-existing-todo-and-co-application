@@ -18,14 +18,18 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
     #[Route('', name: 'list', methods: ['GET'])]
-    public function userList(UserRepository $userRepository): Response
-    {
+    public function userList(
+        UserRepository $userRepository
+    ): Response {
         return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    public function userCreate(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
-    {
+    public function userCreate(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserRepository $userRepository
+    ): Response {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
@@ -49,16 +53,23 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
-    public function userDelete(User $user, UserRepository $userRepository, UserHandlerInterface $userHandler): Response
-    {
+    public function userDelete(
+        User $user,
+        UserRepository $userRepository,
+        UserHandlerInterface $userHandler
+    ): Response {
         $userHandler($user);
 
         return $this->redirectToRoute('user_list', ['users' => $userRepository->findAll()]);
     }
 
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function userEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository): Response
-    {
+    public function userEdit(
+        User $user,
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserRepository $userRepository
+    ): Response {
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
@@ -78,8 +89,8 @@ class UserController extends AbstractController
                 if ($user->getEmail() === $admin) {
                     $user->setRoles(['ROLE_ADMIN']);
                 }
-            }            
-            
+            }
+
             $userRepository->save($user, true);
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");

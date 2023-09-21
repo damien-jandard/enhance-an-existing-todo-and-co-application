@@ -17,42 +17,59 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class TaskController extends AbstractController
 {
     #[Route('', name: 'list', methods: ['GET'])]
-    public function taskList(TaskHandlerInterface $taskHandler): Response
-    {
+    public function taskList(
+        TaskHandlerInterface $taskHandler
+    ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), true),
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $user, true, false),
             'title' => 'Liste de toutes les tâches'
         ]);
     }
 
     #[Route('/todo', name: 'todo', methods: ['GET'])]
-    public function taskListTodo(TaskHandlerInterface $taskHandler): Response
-    {
+    public function taskListTodo(
+        TaskHandlerInterface $taskHandler
+    ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), false, false),
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $user, false, false),
             'title' => 'Liste des tâches à faire'
         ]);
     }
 
     #[Route('/done', name: 'done', methods: ['GET'])]
-    public function taskListDone(TaskHandlerInterface $taskHandler): Response
-    {
+    public function taskListDone(
+        TaskHandlerInterface $taskHandler
+    ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), false, true),
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $user, false, true),
             'title' => 'Liste des tâches terminées'
         ]);
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    public function taskCreate(Request $request, TaskRepository $taskRepository): Response
-    {
+    public function taskCreate(
+        Request $request,
+        TaskRepository $taskRepository
+    ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getUser()->addTask($task);
+            $user->addTask($task);
             $taskRepository->save($task, true);
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
@@ -65,8 +82,11 @@ class TaskController extends AbstractController
 
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     #[IsGranted(TaskVoter::CAN_UPDATE, subject: 'task')]
-    public function taskEdit(Task $task, Request $request, TaskRepository $taskRepository): Response
-    {
+    public function taskEdit(
+        Task $task,
+        Request $request,
+        TaskRepository $taskRepository
+    ): Response {
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -87,8 +107,10 @@ class TaskController extends AbstractController
 
     #[Route('/{id}/toggle', name: 'toggle', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(TaskVoter::CAN_UPDATE, subject: 'task')]
-    public function taskToggle(Task $task, TaskRepository $taskRepository): Response
-    {
+    public function taskToggle(
+        Task $task,
+        TaskRepository $taskRepository
+    ): Response {
         $task->toggle(!$task->isDone());
         $taskRepository->save($task, true);
 
@@ -103,10 +125,15 @@ class TaskController extends AbstractController
 
     #[Route('/{id}/delete', name: 'delete', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(TaskVoter::CAN_DELETE, subject: 'task')]
-    public function taskDelete(Task $task, TaskRepository $taskRepository): Response
-    {
+    public function taskDelete(
+        Task $task,
+        TaskRepository $taskRepository
+    ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         if (null !== $task->getTitle()) {
-            $this->getUser()->removeTask($task);
+            $user->removeTask($task);
         }
         $taskRepository->remove($task, true);
 
