@@ -11,8 +11,8 @@ class UserFixtures extends Fixture
 {
     public const ADMIN_REFERENCE = 'admin';
     public const USER_REFERENCE = 'user';
-    private $userPasswordHasher;
-    public $admin_email;
+    private UserPasswordHasherInterface $userPasswordHasher;
+    public string $admin_email;
 
     public function __construct(UserPasswordHasherInterface $userPasswordHasher, string $admin_email)
     {

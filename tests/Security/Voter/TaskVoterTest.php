@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class TaskVoterTest extends TestCase
 {
-    public function testAccessDeniedWhenNotUserInstance()
+    public function testAccessDeniedWhenNotUserInstance(): void
     {
         $voter = new TaskVoter();
         $subject = new Task();

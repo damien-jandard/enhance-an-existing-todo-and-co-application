@@ -17,7 +17,7 @@ class UserTest extends KernelTestCase
             ->setEmail('username@todolist.com');
     }
 
-    public function assertHasErrors(User $user, int $number = 0)
+    public function assertHasErrors(User $user, int $number = 0): void
     {
         self::bootKernel();
         $container = static::getContainer();
@@ -45,7 +45,7 @@ class UserTest extends KernelTestCase
         $this->assertHasErrors($this->getEntity()->setEmail(''), 1);
     }
 
-    public function testUserEntity()
+    public function testUserEntity(): void
     {
         $user = $this->getEntity();
 

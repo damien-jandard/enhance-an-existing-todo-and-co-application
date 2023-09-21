@@ -6,13 +6,14 @@ use App\Entity\User;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class UserHandler implements UserHandlerInterface
 {
     public function __construct(
         private TaskRepository $taskRepository,
         private UserRepository $userRepository,
-        private $admin_email,
+        private string $admin_email,
         private RequestStack $requestStack
     ) {
     }
@@ -20,18 +21,22 @@ class UserHandler implements UserHandlerInterface
     public function __invoke(User $user): void
     {
         $tasks = $this->taskRepository->findBy(['user' => $user]);
+        /** @var Session $session */
+        $session = $this->requestStack->getSession();
+
         if (!in_array($user->getEmail(), explode(", ", $this->admin_email))) {
             foreach ($tasks as $task) {
                 $task->setUser(null);
                 $this->taskRepository->save($task, true);
             }
             $this->userRepository->remove($user, true);
-            $this->requestStack->getSession()->getFlashBag()->add(
+
+            $session->getFlashBag()->add(
                 'success',
                 'L\'utilisateur a bien été supprimé'
             );
         } else {
-            $this->requestStack->getSession()->getFlashBag()->add(
+            $session->getFlashBag()->add(
                 'danger',
                 'Vous ne pouvez pas supprimer cet utilisateur'
             );

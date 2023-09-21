@@ -20,8 +20,11 @@ class TaskController extends AbstractController
     public function taskList(
         TaskHandlerInterface $taskHandler
     ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), true),
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $user, true, false),
             'title' => 'Liste de toutes les tâches'
         ]);
     }
@@ -30,8 +33,11 @@ class TaskController extends AbstractController
     public function taskListTodo(
         TaskHandlerInterface $taskHandler
     ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), false, false),
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $user, false, false),
             'title' => 'Liste des tâches à faire'
         ]);
     }
@@ -40,8 +46,11 @@ class TaskController extends AbstractController
     public function taskListDone(
         TaskHandlerInterface $taskHandler
     ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $this->getUser(), false, true),
+            'tasks' => $taskHandler($this->isGranted('ROLE_ADMIN'), $user, false, true),
             'title' => 'Liste des tâches terminées'
         ]);
     }
@@ -51,13 +60,16 @@ class TaskController extends AbstractController
         Request $request,
         TaskRepository $taskRepository
     ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getUser()->addTask($task);
+            $user->addTask($task);
             $taskRepository->save($task, true);
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
@@ -117,8 +129,11 @@ class TaskController extends AbstractController
         Task $task,
         TaskRepository $taskRepository
     ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         if (null !== $task->getTitle()) {
-            $this->getUser()->removeTask($task);
+            $user->removeTask($task);
         }
         $taskRepository->remove($task, true);
 
